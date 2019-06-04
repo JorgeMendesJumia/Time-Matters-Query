@@ -5,6 +5,7 @@ from Time_Matters_SingleDoc import Time_Matters_SingleDoc
 from langdetect import detect
 from lang import languages
 
+
 def query(query, max_items):
     import urllib
     import requests
@@ -35,10 +36,21 @@ def query(query, max_items):
                 lang_name = languages[n_list_of_lang][1]
 
         list.append((content, lang_name))
+    extract_dates(list, title, url)
     return list
 
 
+def extract_dates(list, title, url):
+    json={}
+    for data in list:
+        json['title'] = title
+        json['url'] = url
+        json['dates'] = []
+        dates = Time_Matters_SingleDoc(data[0], language=data[1])
+        for dt in dates:
+            json['dates'] += dt
+    print(json)
+
+
 if __name__ == '__main__':
-    list_data = query('Donald Trump', 5)
-    for data in list_data:
-        print(Time_Matters_SingleDoc(data[0], language=data[1]))
+    list_data = query('Avatar', 2)
