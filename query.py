@@ -36,21 +36,21 @@ def query(query, max_items):
                 lang_name = languages[n_list_of_lang][1]
 
         list.append((content, lang_name))
-    extract_dates(list, title, url)
-    return list
+    return title, url, list
 
 
-def extract_dates(list, title, url):
-    json={}
-    for data in list:
-        json['title'] = title
-        json['url'] = url
-        json['dates'] = []
-        dates = Time_Matters_SingleDoc(data[0], language=data[1])
+def time_matters_query(query_text, max_items):
+    title, url, list = query(query_text, max_items)
+    json = {}
+    for i in range(len(list)):
+        json[i] = {'title': title, 'url': url, 'dates': []}
+        dates = Time_Matters_SingleDoc(list[i][0], language=list[i][1])
+        array_dates = []
         for dt in dates:
-            json['dates'] += dt
+            json[i]['dates'] += dt
     print(json)
+    return json
 
 
-if __name__ == '__main__':
-    list_data = query('Avatar', 2)
+# if __name__ == '__main__':
+#    json = time_matters_query('Donald Trump', 2)
