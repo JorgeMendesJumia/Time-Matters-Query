@@ -17,11 +17,15 @@ def query(query, max_items):
     for item in contentsJSon["response_items"]:
         title = item["title"]
         url = item["linkToArchive"]
-        time = item["tstamp"]
+        date = item["date"]
 
-        print(title)
+        from datetime import datetime
+        normal_date = datetime.fromtimestamp(int(date))
+        import datetime
+        formated_date = datetime.datetime.strptime(str(normal_date), "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
+        print(formated_date)
+        print('title'+title)
         print(url)
-        print(time)
 
         page = requests.get(item["linkToExtractedText"])
         #print(page.encoding)
@@ -29,28 +33,33 @@ def query(query, max_items):
         # note a existencia de decode para garantirmos que o conteudo devolvido pelo Arquivo.pt (no formato ISO-8859-1) e impresso no formato (UTF-8)
         content = page.content.decode('utf-8')
         print(content)
-        lang_code = detect(content)
-        lang_name = 'English'
-        for n_list_of_lang in range(len(languages)):
-            if lang_code in languages[n_list_of_lang]:
-                lang_name = languages[n_list_of_lang][1]
+        try :
+            lang_code = detect(content)
+            lang_name = 'English'
+            for n_list_of_lang in range(len(languages)):
+                if lang_code in languages[n_list_of_lang]:
+                    lang_name = languages[n_list_of_lang][1]
+        except:
+            lang_name = 'English'
 
-        list.append((content, lang_name))
-    return title, url, list
+        list.append((content, lang_name, title, url, formated_date))
+    return list
 
 
 def time_matters_query(query_text, max_items):
-    title, url, list = query(query_text, max_items)
-    json = {}
+
+    list = query(query_text, max_items)
+    json = {'query': []}
     for i in range(len(list)):
-        json[i] = {'title': title, 'url': url, 'dates': []}
-        dates = Time_Matters_SingleDoc(list[i][0], language=list[i][1])
-        array_dates = []
-        for dt in dates:
-            json[i]['dates'] += dt
+        one_sentence = list[i][0].split('. ')
+        json['query'] += [{'title': list[i][2], 'url': list[i][3], 'oneSentence': one_sentence[0]+"...", 'dates': []}]
+        try:
+            dates = Time_Matters_SingleDoc(list[i][0], language=list[i][1], heideltime_document_creation_time=list[1][4])
+            json['query'][i]['dates'].append(dates[0])
+            json['query'][i]['dates'].append(dates[len(dates) - 1])
+        except:
+            pass
     print(json)
     return json
 
 
-# if __name__ == '__main__':
-#    json = time_matters_query('Donald Trump', 2)
