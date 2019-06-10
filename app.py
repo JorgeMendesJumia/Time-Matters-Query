@@ -17,7 +17,7 @@ class MyResource(Resource):
              params={'query': 'Insert query'})
     def get(self):
         query_text = str(request.args.get('query'))
-        json_dates = time_matters_query(query_text, 2)
+        json_dates = time_matters_query(query_text, 6)
         return json_dates
 
 
