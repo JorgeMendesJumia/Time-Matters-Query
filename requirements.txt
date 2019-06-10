@@ -1,6 +1,7 @@
 flask
 langdetect
 flask_cors
+flask_restplus
 lxml
 git+https://github.com/JMendes1995/Time-Matters.git
 git+http://github.com/LIAAD/yake
