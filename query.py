@@ -1,17 +1,12 @@
-import requests
-import pprint
-from Time_Matters_MultipleDoc import Time_Matters_MultipleDoc
 from Time_Matters_SingleDoc import Time_Matters_SingleDoc
 from langdetect import detect
 from lang import languages
 
 
 def query(query, max_items):
-    import urllib
     import requests
     payload = {'q': query, 'maxItems': max_items}
     r = requests.get('http://arquivo.pt/textsearch', params=payload)
-    import pprint
     contentsJSon = r.json()
     list = []
     for item in contentsJSon["response_items"]:
