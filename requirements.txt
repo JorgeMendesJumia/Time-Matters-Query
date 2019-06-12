@@ -5,6 +5,7 @@ flask_restplus
 lxml
 nltk
 pandas
+imp
 regex
 git+https://github.com/JMendes1995/Time-Matters.git
 git+http://github.com/LIAAD/yake
