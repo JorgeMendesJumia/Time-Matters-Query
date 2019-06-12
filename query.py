@@ -42,6 +42,7 @@ def query(query, max_items):
 
 
 def time_matters_query(query_text, max_items, offset):
+    import imp
     path = imp.find_module('py_heideltime')[1]
     full_path = path + "/Heideltime/TreeTaggerLinux"
     command = 'chmod 111 ' + full_path
