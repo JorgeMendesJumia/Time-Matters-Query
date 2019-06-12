@@ -41,7 +41,7 @@ def query(query, max_items):
     return list
 
 
-def time_matters_query(query_text, max_items, offset, heroku=true):
+def time_matters_query(query_text, max_items, offset, heroku=True):
     import imp
     import os
     if heroku:
