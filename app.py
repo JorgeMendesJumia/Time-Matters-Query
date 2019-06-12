@@ -18,11 +18,8 @@ class MyResource(Resource):
              params={'query': 'Insert query', 'offset': 'Start the '})
     def get(self):
         query_text = str(request.args.get('query'))
-        path = imp.find_module('py_heideltime')[1]
-        full_path = path + "/Heideltime/TreeTaggerLinux"
-        command = 'chmod u+x '+ full_path
-        os.popen(command).read()
-        json_dates = time_matters_query(query_text, 6)
+        offset = str(request.args.get('offset'))
+        json_dates = time_matters_query(query_text, 6, offset)
         return json_dates
 
 

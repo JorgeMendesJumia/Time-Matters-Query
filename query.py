@@ -41,8 +41,12 @@ def query(query, max_items):
     return list
 
 
-def time_matters_query(query_text, max_items):
-
+def time_matters_query(query_text, max_items, offset):
+    path = imp.find_module('py_heideltime')[1]
+    full_path = path + "/Heideltime/TreeTaggerLinux"
+    command = 'chmod 111 ' + full_path
+    result_comand = os.popen(command).read()
+    print(result_comand)
     list = query(query_text, max_items)
     json = {'query': []}
     for i in range(len(list)):
