@@ -19,7 +19,7 @@ class MyResource(Resource):
     def get(self):
         query_text = str(request.args.get('query'))
         offset = str(request.args.get('offset'))
-        json_dates = time_matters_query(query_text, 6, offset)
+        json_dates = time_matters_query(query_text, 5, offset)
         return json_dates
 
 
