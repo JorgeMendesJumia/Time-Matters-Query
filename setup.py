@@ -1,6 +1,6 @@
 
 from setuptools import setup, find_packages
-setup(name='Time-Matters-Query',
+setup(name='Time_Matters_Query',
       version='1.0',
       description="",
       author='Jorge Alexandre Rocha Mendes',

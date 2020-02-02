@@ -1,6 +1,6 @@
 import requests
 from langdetect import detect
-from lang import languages
+from Time_Matters_Query.lang import languages
 from Time_Matters_SingleDoc import Time_Matters_SingleDoc
 from Time_Matters_MultipleDocs import Time_Matters_MultipleDocs
 

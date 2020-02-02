@@ -3,7 +3,7 @@
 ## How to use Time-Matters-Query
 ### Time-Matters-Query with arquivo.pt api
 ``` bash
-from query import Query
+from Time_Matters_Query.query import Query
 
 max_items=1
 starting_page=1
@@ -17,7 +17,7 @@ temporal_search_multiple_doc = query.Time_Matters_MultipleDocs(articles)
 ### Time-Matters-Query with google search engine
 
 ``` bash
-from query import Query
+from Time_Matters_Query.query import Query
 
 max_items=1
 starting_page=1
