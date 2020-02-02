@@ -2,9 +2,8 @@ from flask import request
 from flask_restplus import Api, Resource
 from flask import Flask
 from flask_cors import CORS
-from query import time_matters_query
+from query_dev import Time_Matters_Query
 import os
-import imp
 
 flask_app = Flask(__name__)
 app = Api(app=flask_app)
@@ -19,7 +18,7 @@ class MyResource(Resource):
     def get(self):
         query_text = str(request.args.get('query'))
         offset = str(request.args.get('offset'))
-        json_dates = time_matters_query(query_text, 5, offset)
+        json_dates = Time_Matters_Query(query_text, 5, offset)
         return json_dates
 
 

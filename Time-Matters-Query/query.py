@@ -49,9 +49,6 @@ class Query():
         from googlesearch import search
         list = []
         for url in search(query, tld='com', start = self.offset, stop=self.max_items):
-            print(url)
-            import urllib.request
-
             r = requests.get(url)
             from bs4 import BeautifulSoup
             soup = BeautifulSoup(r.text, 'lxml')
