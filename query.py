@@ -1,67 +1,71 @@
-from Time_Matters_SingleDoc import Time_Matters_SingleDoc
+import requests
 from langdetect import detect
 from lang import languages
+from Time_Matters_SingleDoc import Time_Matters_SingleDoc
+from Time_Matters_MultipleDocs import Time_Matters_MultipleDocs
+
+class Query():
+
+    def __init__(self, max_items=0, offset=0, search_type='singleText'):
+        self.max_items = max_items
+        self.offset = offset
+        self.search_type = search_type
+
+    def arquivo_pt(self, query):
+
+        arquivo_pt='http://arquivo.pt/textsearch'
+        payload = {'q': query, 'maxItems': self.max_items, 'offset': self.offset}
+        r = requests.get(arquivo_pt, params=payload)
+        contentsJSon = r.json()
+        list = []
+        for item in contentsJSon["response_items"]:
+            title = item["title"]
+            url = item["linkToArchive"]
+            date = item["date"]
+
+            from datetime import datetime
+            normal_date = datetime.fromtimestamp(int(date))
+            import datetime
+            formated_date = datetime.datetime.strptime(str(normal_date), "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
+
+            page = requests.get(item["linkToExtractedText"])
+
+            content = page.content.decode('utf-8')
+            try:
+                lang_code = detect(content)
+                lang_name = 'English'
+                for n_list_of_lang in range(len(languages)):
+                    if lang_code in languages[n_list_of_lang]:
+                        lang_name = languages[n_list_of_lang][1]
+            except:
+                lang_name = 'English'
+
+            #list.append((content, lang_name, title, url, formated_date))
+            list.append(content)
+        return list
 
 
-def query(query, max_items):
-    import requests
-    payload = {'q': query, 'maxItems': max_items}
-    r = requests.get('http://arquivo.pt/textsearch', params=payload)
-    contentsJSon = r.json()
-    list = []
-    for item in contentsJSon["response_items"]:
-        title = item["title"]
-        url = item["linkToArchive"]
-        date = item["date"]
+    def google(self, query):
+        from googlesearch import search
+        list = []
+        for url in search(query, tld='com', start = self.offset, stop=self.max_items):
+            print(url)
+            import urllib.request
 
-        from datetime import datetime
-        normal_date = datetime.fromtimestamp(int(date))
-        import datetime
-        formated_date = datetime.datetime.strptime(str(normal_date), "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
-        print(formated_date)
-        print('title'+title)
-        print(url)
+            r = requests.get(url)
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(r.text, 'lxml')
 
-        page = requests.get(item["linkToExtractedText"])
-        #print(page.encoding)
+            #soup = BeautifulSoup(r.text, 'html.parser')
+            list.append(soup.text.encode().decode('utf-8'))
+            text = soup.find_all(text=True)
+            #print(text)
+        return list
 
-        # note a existencia de decode para garantirmos que o conteudo devolvido pelo Arquivo.pt (no formato ISO-8859-1) e impresso no formato (UTF-8)
-        content = page.content.decode('utf-8')
-        print(content)
-        try :
-            lang_code = detect(content)
-            lang_name = 'English'
-            for n_list_of_lang in range(len(languages)):
-                if lang_code in languages[n_list_of_lang]:
-                    lang_name = languages[n_list_of_lang][1]
-        except:
-            lang_name = 'English'
+    def Time_Matters_SingleDoc(self, list, temporal_tagger=['rule_based'], time_matters=[], score_type='ByDoc'):
+        results = Time_Matters_SingleDoc(list[0], temporal_tagger=temporal_tagger, time_matters=time_matters, score_type=score_type, debug_mode=False)
+        return results
 
-        list.append((content, lang_name, title, url, formated_date))
-    return list
-
-
-def time_matters_query(query_text, max_items, offset, heroku=True):
-    import imp
-    import os
-    if heroku:
-        path = imp.find_module('py_heideltime')[1]
-        full_path = path + "/Heideltime/TreeTaggerLinux/bin/*"
-        command = 'chmod 111 ' + full_path
-        result_comand = os.popen(command).read()
-        print(result_comand)
-    list = query(query_text, max_items)
-    json = {'query': []}
-    for i in range(len(list)):
-        one_sentence = list[i][0].split('. ')
-        json['query'] += [{'title': list[i][2], 'url': list[i][3], 'oneSentence': one_sentence[0]+"...", 'dates': []}]
-        try:
-            dates = Time_Matters_SingleDoc(list[i][0], language=list[i][1], heideltime_document_creation_time=list[1][4])
-            json['query'][i]['dates'].append(dates[0])
-            json['query'][i]['dates'].append(dates[len(dates) - 1])
-        except:
-            pass
-    print(json)
-    return json
-
-
+    def Time_Matters_MultipleDocs(self, list, temporal_tagger=['rule_based'], time_matters=[], score_type='ByCorpus'):
+        results = Time_Matters_MultipleDocs(list, temporal_tagger=temporal_tagger, time_matters=time_matters, score_type=score_type, debug_mode=False)
+        return results
