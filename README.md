@@ -23,7 +23,7 @@ result_articles = query.arquivo_pt(q,domains)
 - `domains`: <b>(optional)</b> List of domains to search into (e.g. ['http://publico.pt/', 'http://www.dn.pt/'])
 - `from` : <b>(optional)</b> Set an initial date for the time span of the search. Format: YYYYMMDDHHMMSS, also accepts a shorter date fotmat, e.g. (YYYY). (Default: 1996)
 - `to` : <b>(optional)</b> Set a end date for the time span of the search. format: YYYYMMDDHHMMSS, also accepts a shorter date format, for example (YYYY). (Default: Current Year-1)
-- `url` : <b>(optional)</b> Custom url  (e.g. https://arquivo.pt/textsearch?versionHistory=http://www.ipt.pt&maxItems=1000&from=2010&to=2016
+- `url` : <b>(optional)</b> Custom url  (e.g. https://arquivo.pt/textsearch?versionHistory=http://www.ipt.pt&maxItems=1000&from=2010&to=2016)
 
 ###### Output
 The output will be a list of dictionaries composed by:
