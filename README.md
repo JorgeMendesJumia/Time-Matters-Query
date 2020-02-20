@@ -12,7 +12,7 @@ max_items=3
 offset=0
 query = Query(max_items, offset, newspaper3k=True)
 domain = 'http://www.ipt.pt'
-from = '2010'
+from = '2000'
 to = '2009'
 q = 'guerra na síria'
 result_articles = query.arquivo_pt(q,domain, from, to)
