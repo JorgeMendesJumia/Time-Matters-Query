@@ -11,7 +11,7 @@ from Time_Matters_Query import Query
 max_items=3
 offset=0
 query = Query(max_items, offset, newspaper3k=True)
-domain = 'http://www.ipt.pt'
+domain = 'http://www.jn.pt'
 from = '2000'
 to = '2009'
 q = 'guerra na síria'
