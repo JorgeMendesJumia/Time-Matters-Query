@@ -46,7 +46,6 @@ class Query():
         domains_list = list(set(d))
 
         statistical_dict = self.search_statistics(total_time, self.max_items, len(domains_list))
-        print(domains_list)
 
         final_output=[statistical_dict, result_list]
         return final_output
