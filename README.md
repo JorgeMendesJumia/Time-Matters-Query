@@ -15,7 +15,7 @@ domain = 'http://www.ipt.pt'
 from = '2010'
 to = '2009'
 q = 'guerra na síria'
-result_articles = query.arquivo_pt(q, url, from, to)
+result_articles = query.arquivo_pt(q,domain, from, to)
 ```
 #### _Query parameters
 - `max_items` : <b>(optional)</b> Maximum number of items on the response.(Default: 50, Max: 2000) 
