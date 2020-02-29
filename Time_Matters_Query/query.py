@@ -13,10 +13,7 @@ class Query():
         site_search=[]
         import time
         start_time = time.time()
-        if not isinstance(domains,list):
-            site_search.append(domains)
-        else:
-            site_search=domains
+
         if link == '':
             arquivo_pt = 'http://arquivo.pt/textsearch'
             payload = {'q': query,
