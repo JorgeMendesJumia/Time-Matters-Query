@@ -15,6 +15,7 @@ domains = ['http://www.jn.pt', 'http://www.publico.pt']
 beginDate = '2000'
 endDate = '2009'
 q = 'guerra na síria'
+
 result_articles = query.arquivo_pt(q,domains, beginDate, endDate)
 ```
 #### Query parameters
