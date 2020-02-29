@@ -1,2 +1,2 @@
-from py_heideltime.py_heideltime import py_heideltime
 from Time_Matters_Query.query import Query
+from Time_Matters_Query.TextProcessing.normalization import normalization
