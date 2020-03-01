@@ -10,10 +10,9 @@ class Query():
 
     def arquivo_pt(self, query,  domains=[], beginDate='', endDate='', link=''):
         domain_list = []
-        site_search=[]
         import time
         start_time = time.time()
-
+        site_search = ','.join(domains)
         if link == '':
             arquivo_pt = 'http://arquivo.pt/textsearch'
             payload = {'q': query,
