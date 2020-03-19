@@ -124,7 +124,7 @@ def format_output(item, newspaper3k):
     else:
         page = requests.get(item["linkToExtractedText"])
         from Time_Matters_Query import normalization
-        fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8').replace('\xa0', '')
+        fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
         try:
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
                       'snippet': snippet,
