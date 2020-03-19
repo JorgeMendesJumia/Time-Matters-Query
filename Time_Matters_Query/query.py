@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 
 
 class Query():
-    def __init__(self, max_items=50, offset=0, newspaper3k=False):
+    def __init__(self, max_items=15, offset=0, newspaper3k=False):
         self.max_items = max_items
         self.offset = offset
         self.newspaper3k=newspaper3k
@@ -124,7 +124,7 @@ def format_output(item, newspaper3k):
     else:
         page = requests.get(item["linkToExtractedText"])
         from Time_Matters_Query import normalization
-        fullContentLenght_Arquivo = page.content.decode('utf-8')
+        fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8').replace('\xa0', '')
         try:
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
                       'snippet': snippet,
