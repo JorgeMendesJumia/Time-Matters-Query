@@ -64,7 +64,7 @@ def format_output(item, newspaper3k):
             fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
 
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
-                          'crawledData': item['tstamp'],
+                          'crawledDate': item['tstamp'],
                           'title': item["title"].replace('\xa0', '').replace('\x95', ''),
                           'url': item["linkToArchive"],
                           'domain': domain[0]}
