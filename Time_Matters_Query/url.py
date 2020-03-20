@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 
 from Time_Matters_Query.query import newspaper3k_get_text, search_statistics
 class URL:
-    def __init__(self, max_items=15, offset=0, newspaper3k=True):
+    def __init__(self, max_items=15, offset=0, newspaper3k=False):
         self.max_items = max_items
         self.offset = offset
         self.newspaper3k=newspaper3k
