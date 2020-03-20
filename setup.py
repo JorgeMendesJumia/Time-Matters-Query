@@ -15,6 +15,7 @@ setup(name='Time_Matters_Query',
       author='Jorge Alexandre Rocha Mendes',
       author_email='mendesjorge49@gmail.com',
       url='https://github.com/JMendes1995/Time-Matters-Query.git',
-      install_requires=install_requires,
+      packages=find_packages(),
+      install_requires=install_requires
       )
 
