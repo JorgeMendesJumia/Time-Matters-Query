@@ -45,7 +45,7 @@ The output will be a list of 2 dictionaries composed by:
 
 
 ``` bash
-from Time_Matters_Query import Query
+from Time_Matters_Query.url import URL
 
 max_items=3
 offset=0
