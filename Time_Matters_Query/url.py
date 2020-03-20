@@ -31,7 +31,7 @@ class URL:
         for item in x:
             if item[0] != {}:
                 result_list.append(item[0])
-            if item[1] not in domain_list:
+            if item[1] not in domain_list and 'www.'+item[1] not in domain_list:
                 domain_list.append(item[1])
 
         total_time = time.time() - start_time
@@ -44,14 +44,15 @@ class URL:
 
 def format_output(item, newspaper3k):
     import re
-    fetched_domain = re.findall('https://(.+?)/|http://(.+?)/', item['originalURL'])
-    domain = [d for d in fetched_domain[0] if d != ""]
+    fetched_domain = re.findall('''https://(.+?)/|http://(.+?)/''', item['originalURL'])
+
+    domain = [d for d in fetched_domain[0] if d != "" ]
     if newspaper3k == True:
         try:
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
             result = {'fullContentLenght_Newspaper3K': fullContentLenght_Newspaper3K,
                       'Summary_Newspaper3k': Summary_Newspaper3k,
-                      'crawledData': item['tstamp'],
+                      'crawledDate': item['tstamp'],
                       'title': item["title"],
                       'url': item["linkToArchive"],
                       'domain': domain[0]}
