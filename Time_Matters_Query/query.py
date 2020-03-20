@@ -114,9 +114,9 @@ def format_output(item, newspaper3k):
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
             result = {'fullContentLenght_Newspaper3K': fullContentLenght_Newspaper3K,
                       'Summary_Newspaper3k': Summary_Newspaper3k,
-                      'snippet': snippet,
+                      'snippet': snippet.replace('\xa0', '').replace('\x95', ''),
                       'crawledDate': item['tstamp'],
-                      'title': item["title"],
+                      'title': item["title"].replace('\xa0', '').replace('\x95', ''),
                       'url': item["linkToArchive"],
                       'domain': domain[0]}
         except:
@@ -127,9 +127,9 @@ def format_output(item, newspaper3k):
         fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
         try:
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
-                      'snippet': snippet,
+                      'snippet': snippet.replace('\xa0', '').replace('\x95', ''),
                       'crawledDate': item['tstamp'],
-                      'title': item["title"],
+                      'title': item["title"].replace('\xa0', '').replace('\x95', ''),
                       'url': item["linkToArchive"],
                       'domain': domain[0]}
         except:

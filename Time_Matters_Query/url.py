@@ -61,11 +61,11 @@ def format_output(item, newspaper3k):
     else:
         try:
             page = requests.get(item["linkToExtractedText"])
-            fullContentLenght_Arquivo = page.content.decode('utf-8')
+            fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
 
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
                           'crawledData': item['tstamp'],
-                          'title': item["title"],
+                          'title': item["title"].replace('\xa0', '').replace('\x95', ''),
                           'url': item["linkToArchive"],
                           'domain': domain[0]}
         except:
