@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 
 from Time_Matters_Query.query import newspaper3k_get_text, search_statistics
 class URL:
-    def __init__(self, max_items=50, offset=0, newspaper3k=True):
+    def __init__(self, max_items=15, offset=0, newspaper3k=True):
         self.max_items = max_items
         self.offset = offset
         self.newspaper3k=newspaper3k
@@ -36,7 +36,7 @@ class URL:
 
         total_time = time.time() - start_time
 
-        statistical_dict = search_statistics(total_time, len(result_list), len(domain_list))
+        statistical_dict = search_statistics(total_time, len(result_list), len(domain_list), domain_list)
         final_output = [statistical_dict, result_list]
         return final_output
 
@@ -44,7 +44,8 @@ class URL:
 
 def format_output(item, newspaper3k):
     import re
-    domain = re.findall('(?:https://.+?/|http://.+?/)',item['originalURL'])
+    fetched_domain = re.findall('https://(.+?)/|http://(.+?)/', item['originalURL'])
+    domain = [d for d in fetched_domain[0] if d != ""]
     if newspaper3k == True:
         try:
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
