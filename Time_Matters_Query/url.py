@@ -53,7 +53,7 @@ def format_output(item, newspaper3k):
             result = {'fullContentLenght_Newspaper3K': fullContentLenght_Newspaper3K,
                       'Summary_Newspaper3k': Summary_Newspaper3k,
                       'crawledDate': item['tstamp'],
-                      'title': item["title"],
+                      'title': item["title"].replace('\xa0', '').replace('\x95', ''),
                       'url': item["linkToArchive"],
                       'domain': domain[0]}
         except:
