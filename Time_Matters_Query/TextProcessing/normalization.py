@@ -173,7 +173,7 @@ def lowerCase(text):
 
 
 def normalization(corpus, html_strip=True, accented_char_removal=True, contraction_expansion=True,
-                  text_lower_case=True, special_char_removal=True, remove_digits=True):
+                  text_lower_case=True, special_char_removal=True, remove_digits=False):
     # strip HTML
     if html_strip:
         corpus = html_stripping(corpus)
