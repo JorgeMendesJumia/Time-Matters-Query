@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 
 
 class Query():
-    def __init__(self, max_items=15, offset=0, newspaper3k=False):
+    def __init__(self, max_items=50, offset=0, newspaper3k=False):
         self.max_items = max_items
         self.offset = offset
         self.newspaper3k=newspaper3k
@@ -65,19 +65,23 @@ class Query():
         from googlesearch import search
         list = []
         for url in search(query, tld='com', start = self.offset, stop=self.max_items):
-            fullContentLenght_Newspaper3K, Summary_Newspaper3k = self.newspaper3k(url)
+            if self.newspaper3k:
+                fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(url)
 
-            r = requests.get(url)
-            from bs4 import BeautifulSoup
-            soup = BeautifulSoup(r.text, 'lxml')
-            result = {'fullContentLenght_Newspaper3K':fullContentLenght_Newspaper3K,
-                      'Summary_Newspaper3k':Summary_Newspaper3k,
-                      'fullContentLenght': soup.text.encode().decode('utf-8'),
-                      'url':url}
-            list.append(result)
+                r = requests.get(url)
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(r.text, 'lxml')
+                result = {'fullContentLenght_Newspaper3K':fullContentLenght_Newspaper3K,
+                          'Summary_Newspaper3k':Summary_Newspaper3k,
+                           'fullContentLenght': soup.text.encode().decode('utf-8'),
+                           'url':url}
+                list.append(result)
 
 
         return list
+
+
+# ------------------------------------------------------------------------------------------------------
 
     def request_arquivo_api(self, domain_list, contentsJSon):
         result_list = []
