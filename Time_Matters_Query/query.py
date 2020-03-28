@@ -112,7 +112,8 @@ def format_output(item, newspaper3k):
     domain = [ d for d in fetched_domain[0] if d != ""]
 
     from Time_Matters_Query import normalization
-    snippet= normalization(item['snippet'], html_strip=True, contraction_expansion=False)
+    snippet= normalization(item['snippet'], html_strip=True, accented_char_removal=False, contraction_expansion=False,
+                  text_lower_case=False, special_char_removal=False, remove_digits=False)
     if newspaper3k == True:
         try:
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
@@ -129,6 +130,8 @@ def format_output(item, newspaper3k):
         page = requests.get(item["linkToExtractedText"])
         from Time_Matters_Query import normalization
         fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
+        full_content_arquivo = normalization(fullContentLenght_Arquivo, contraction_expansion=False)
+
         try:
             result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
                       'snippet': snippet.replace('\xa0', '').replace('\x95', ''),
