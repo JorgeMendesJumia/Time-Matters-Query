@@ -5,7 +5,7 @@ Time matters query is the result of a research conducted by Ricardo Campos durin
 Time matters query is a [python package](https://github.com/LIAAD/Time-Matters-Query) that aims to score the relevance of temporal expressions found (through time matters [package](https://github.com/LIAAD/Time-Matters)) within a set of texts. To get these texts, users are given the chance to query a system. The current version of this package offers users the chance to get results from the [Arquivo.pt](http://arquivo.pt), portuguese web archive, yet other systems may be easily added.
 
 ## Where can I find Time-Matters-Query?
-`Time-Matters` can be found as a standalone installation on [github](https://github.com/LIAAD/Time-Matters-Query) and as an API [http://time-matters-query.inesctec.pt/api].
+`Time-Matters-Query` can be found as a standalone installation on [github](https://github.com/LIAAD/Time-Matters-Query) and as an API [http://time-matters-query.inesctec.pt/api].
 
 ## How to Install Time Matters Query
 ### Install Time-Matters-Query library
