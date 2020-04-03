@@ -3,4 +3,3 @@ lxml
 setuptools
 google
 newspaper3k
-joblib
