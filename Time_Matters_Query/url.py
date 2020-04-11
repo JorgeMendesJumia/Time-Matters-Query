@@ -1,15 +1,21 @@
-import requests
-from newspaper import Article
-from joblib import Parallel, delayed
 
+from newspaper import Article
+from random import random
+import random
+from multiprocessing import Pool
+from itertools import repeat
+import requests
+import multiprocessing
+from itertools import chain
 from Time_Matters_Query.query import newspaper3k_get_text, search_statistics
+
 class URL:
     def __init__(self, max_items=50, offset=0, newspaper3k=False):
         self.max_items = max_items
         self.offset = offset
         self.newspaper3k=newspaper3k
 
-    def arquivo_pt(self, url='', beginDate='', endDate=''):
+    def arquivo_pt(self, url='', beginDate='', endDate='', title=True, fullContent=False):
         domain_list = []
         import time
         start_time = time.time()
@@ -23,11 +29,13 @@ class URL:
         r = requests.get(arquivo_pt, params=payload)
         contentsJSon = r.json()
         result_list = []
+
         import multiprocessing
 
-        multiprocessing.cpu_count()
-        x = Parallel(n_jobs=multiprocessing.cpu_count() * 2)(
-            delayed(format_output)(item, self.newspaper3k) for item in contentsJSon["response_items"])
+        with Pool(processes=multiprocessing.cpu_count()) as pool:
+            x = pool.starmap(format_output,
+            zip(contentsJSon["response_items"], repeat(self.newspaper3k), repeat(title), repeat(fullContent)))
+
         for item in x:
             if item[0] != {}:
                 result_list.append(item[0])
@@ -42,34 +50,36 @@ class URL:
 
 
 
-def format_output(item, newspaper3k):
+def format_output(item, newspaper3k, title, fullContent):
     import re
-    fetched_domain = re.findall('''https://(.+?)/|http://(.+?)/''', item['originalURL'])
+    fetched_domain = re.findall('https://(.+?)/|http://(.+?)/',item['originalURL'])
+    domain = [ d for d in fetched_domain[0] if d != ""]
+    result_tmp={}
 
-    domain = [d for d in fetched_domain[0] if d != "" ]
-    if newspaper3k == True:
+    if newspaper3k == True and fullContent == True:
         try:
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
-            result = {'fullContentLenght_Newspaper3K': fullContentLenght_Newspaper3K,
-                      'Summary_Newspaper3k': Summary_Newspaper3k,
-                      'crawledDate': item['tstamp'],
-                      'title': item["title"].replace('\xa0', '').replace('\x95', ''),
-                      'url': item["linkToArchive"],
-                      'domain': domain[0]}
+            result_tmp['fullContentLenght_Newspaper3K'] = fullContentLenght_Newspaper3K
+            result_tmp['Summary_Newspaper3k'] = Summary_Newspaper3k
         except:
-            return {}, domain[0]
-    else:
+            return [{}, domain[0]]
+    elif newspaper3k == False and fullContent==True:
         try:
             page = requests.get(item["linkToExtractedText"])
+            from Time_Matters_Query import normalization
             fullContentLenght_Arquivo = page.content.decode(encoding = 'UTF-8',errors = 'strict').replace('\xa0', '').replace('\x95', '')
-
-            result = {'fullContentLenght_Arquivo': fullContentLenght_Arquivo,
-                          'crawledDate': item['tstamp'],
-                          'title': item["title"].replace('\xa0', '').replace('\x95', ''),
-                          'url': item["linkToArchive"],
-                          'domain': domain[0]}
+            full_content_arquivo = normalization(fullContentLenght_Arquivo, contraction_expansion=False)
+            result_tmp['fullContentLenght_Arquivo'] = full_content_arquivo
         except:
-            return {}, domain[0]
+            pass
+    try:
+        if title:
+            result_tmp['title'] = item['title'].replace('\xa0', '').replace('\x95', '')
+        res= {'crawledDate': item['tstamp'],
+              'url': item["linkToArchive"],
+              'domain': domain[0]}
+        result_tmp.update(res)
+    except:
+        return [{}, domain[0]]
 
-    return result, domain[0]
-
+    return [result_tmp, domain[0]]
