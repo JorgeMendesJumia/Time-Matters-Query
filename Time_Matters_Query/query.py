@@ -26,7 +26,6 @@ class Query():
             results_by_domain = pool.starmap(self.getResultsByDomain,
                                              zip(domains, repeat(query),  repeat(beginDate), repeat(endDate), repeat(link)))
 
-
         results_flat_list = list(chain.from_iterable(results_by_domain))
 
         try:
@@ -54,7 +53,6 @@ class Query():
         return final_output
 
     def getResultsByDomain(self, domain, query, beginDate, endDate, link):
-        itemsPerSite = self.max_items
         if link == '':
                 arquivo_pt = 'http://arquivo.pt/textsearch'
                 payload = {'q': query,
@@ -63,7 +61,7 @@ class Query():
                        'siteSearch': domain,
                        'from': beginDate,
                        'to': endDate,
-                       'itemsPerSite': itemsPerSite,
+                       'itemsPerSite': self.max_items,
                        'fields': 'title,originalURL,linkToExtractedText,linkToNoFrame,linkToArchive,tstamp,date,siteSearch,snippet'}
                 r = requests.get(arquivo_pt, params=payload, timeout=300)
                 try:
@@ -95,16 +93,18 @@ def format_output(item, newspaper3k, title, snippet, fullContent):
                             contraction_expansion=False,
                             text_lower_case=False, special_char_removal=False, remove_digits=False)
     title_content = item['title'].replace('\xa0', '').replace('\x95', '')
-    dummy_dct = {'title': title_content, 'snippet': snippet_content}
+
 
     if newspaper3k == True and fullContent == True:
         try:
-
             fullContentLenght_Newspaper3K, Summary_Newspaper3k = newspaper3k_get_text(item['linkToNoFrame'])
             result_tmp['fullContentLenght_Newspaper3K'] = fullContentLenght_Newspaper3K
             result_tmp['Summary_Newspaper3k'] = Summary_Newspaper3k
         except:
-            return [{}, domain[0]]
+            result_tmp['fullContentLenght_Newspaper3K'] = ""
+            result_tmp['Summary_Newspaper3k'] = ""
+
+
     elif newspaper3k == False and fullContent==True:
         try:
             page = requests.get(item["linkToExtractedText"])
@@ -113,18 +113,19 @@ def format_output(item, newspaper3k, title, snippet, fullContent):
             full_content_arquivo = normalization(fullContentLenght_Arquivo, contraction_expansion=False)
             result_tmp['fullContentLenght_Arquivo'] = full_content_arquivo
         except:
-            return [{}, domain[0]]
+            result_tmp['fullContentLenght_Arquivo'] = ''
     try:
         if title:
-            result_tmp['title'] = dummy_dct['title']
+            result_tmp['title'] = title_content
         if snippet:
-            result_tmp['snippet'] = dummy_dct['snippet']
+            result_tmp['snippet'] = snippet_content
         res= {'crawledDate': item['tstamp'],
               'url': item["linkToArchive"],
               'domain': domain[0]}
         result_tmp.update(res)
     except:
         return [{}, domain[0]]
+
     return [result_tmp, domain[0]]
 
 

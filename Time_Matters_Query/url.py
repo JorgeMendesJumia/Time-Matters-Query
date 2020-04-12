@@ -15,7 +15,7 @@ class URL:
         self.offset = offset
         self.newspaper3k=newspaper3k
 
-    def arquivo_pt(self, url='', beginDate='', endDate='', title=True, fullContent=False):
+    def arquivo_pt(self, url='', beginDate='', endDate='', title=True,  fullContent=False):
         domain_list = []
         import time
         start_time = time.time()
@@ -32,7 +32,7 @@ class URL:
 
         import multiprocessing
 
-        with Pool(processes=multiprocessing.cpu_count()) as pool:
+        with Pool(processes=1) as pool:
             x = pool.starmap(format_output,
             zip(contentsJSon["response_items"], repeat(self.newspaper3k), repeat(title), repeat(fullContent)))
 
@@ -62,7 +62,9 @@ def format_output(item, newspaper3k, title, fullContent):
             result_tmp['fullContentLenght_Newspaper3K'] = fullContentLenght_Newspaper3K
             result_tmp['Summary_Newspaper3k'] = Summary_Newspaper3k
         except:
-            return [{}, domain[0]]
+            result_tmp['fullContentLenght_Newspaper3K'] = ""
+            result_tmp['Summary_Newspaper3k'] = ""
+
     elif newspaper3k == False and fullContent==True:
         try:
             page = requests.get(item["linkToExtractedText"])
@@ -71,7 +73,7 @@ def format_output(item, newspaper3k, title, fullContent):
             full_content_arquivo = normalization(fullContentLenght_Arquivo, contraction_expansion=False)
             result_tmp['fullContentLenght_Arquivo'] = full_content_arquivo
         except:
-            pass
+            result_tmp['fullContentLenght_Arquivo'] = ''
     try:
         if title:
             result_tmp['title'] = item['title'].replace('\xa0', '').replace('\x95', '')
@@ -81,5 +83,4 @@ def format_output(item, newspaper3k, title, fullContent):
         result_tmp.update(res)
     except:
         return [{}, domain[0]]
-
     return [result_tmp, domain[0]]
